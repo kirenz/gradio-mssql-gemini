@@ -24,6 +24,10 @@ def _ensure_src_on_path() -> None:
         sys.path.insert(0, str(src_dir))
 
 
+# Make shared helpers importable even when the script is executed via `uv run`.
+_ensure_src_on_path()
+
+
 def _check_quarto() -> None:
     if not shutil.which("quarto"):
         raise RuntimeError(

@@ -2,12 +2,39 @@
 
 Reusable helpers, Quarto stories, and Gradio apps that sit on top of a Microsoft SQL Server dataset. Gemini handles the natural-language and narrative heavy lifting while SQL Server remains the single source of truth.
 
-> **Five-minute Quick Start**
-> 1. Install [uv](https://github.com/astral-sh/uv), [Quarto CLI](https://quarto.org/docs/download/), and an ODBC driver for SQL Server.
-> 2. `git clone https://github.com/kirenz/gradio-mssql-gemini.git && cd gradio-mssql-gemini`
-> 3. `uv sync`
-> 4. `cp .env.example .env` and fill in MSSQL + `GEMINI_API_KEY`.
-> 5. `uv run python scripts/render_dashboard.py` – opens `examples/pdf-briefing/outputs/sales_pdf.pdf`.
+**Quick Start**
+
+1. Install [uv](https://github.com/astral-sh/uv), [Quarto CLI](https://quarto.org/docs/download/), and an ODBC driver for SQL Server.
+
+2. Clone the toolkit:
+```bash
+git clone https://github.com/kirenz/gradio-mssql-gemini.git
+```
+3. Enter the project folder:
+```bash
+cd gradio-mssql-gemini
+```
+4. Install dependencies:
+```bash
+uv sync
+```
+5. Copy the environment template:
+```bash
+cp .env.example .env
+```
+6. Edit `.env` to add MSSQL credentials and `GEMINI_API_KEY`.
+
+7. Open VS Code in the project folder
+
+```bash
+code .
+```
+
+8. Render the sample dashboard:
+```bash
+uv run python scripts/render_dashboard.py
+```
+9. The render step opens `examples/pdf-briefing/outputs/sales_pdf.pdf`.
 
 ## Choose Your Path
 
