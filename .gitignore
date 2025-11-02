@@ -14,3 +14,10 @@ wheels/
 .python-version
 .venv/
 __pycache__/
+
+# Example artefacts
+examples/*/outputs/**
+!examples/*/outputs/.gitignore
+examples/*/.gradio/
+examples/*/_freeze/
+examples/*/.quarto/

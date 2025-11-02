@@ -1,141 +1,43 @@
-# Gradio MSSQL Gemini Apps
+# Gradio + Gemini + MSSQL Toolkit
 
-This repository hosts a small suite of Gradio front ends that sit on top of a Microsoft SQL Server backend. You can:
+Reusable helpers, Quarto stories, and Gradio apps that sit on top of a Microsoft SQL Server dataset. Gemini handles the natural-language and narrative heavy lifting while SQL Server remains the single source of truth.
 
-- ask natural-language questions and get SQL + data back,
-- build time-series forecasts with guided filters, and
-- generate parameterised PDF reports driven by Quarto.
+> **Five-minute Quick Start**
+> 1. Install [uv](https://github.com/astral-sh/uv), [Quarto CLI](https://quarto.org/docs/download/), and an ODBC driver for SQL Server.
+> 2. `git clone https://github.com/kirenz/gradio-mssql-gemini.git && cd gradio-mssql-gemini`
+> 3. `uv sync`
+> 4. `cp .env.example .env` and fill in MSSQL + `GEMINI_API_KEY`.
+> 5. `uv run python scripts/render_dashboard.py` – opens `examples/pdf-briefing/outputs/sales_pdf.pdf`.
 
-Gemini powers the SQL generation and automated insights while SQL Server remains the single source of truth.
+## Choose Your Path
 
-> [!IMPORTANT]
-> Install [uv](https://github.com/astral-sh/uv) first. uv creates the virtual environment declared in `pyproject.toml`, pins dependencies via `uv.lock`, and executes the apps (`uv run ...`).
+| Experience | What happens | Command |
+| --- | --- | --- |
+| [SQL Assistant](examples/sql-assistant/README.md) | Chat with your data, auto-generate SQL, optional plots & speech. | `uv run python examples/sql-assistant/app_df.py` |
+| [Sales Forecasting Lab](examples/sales-dashboard/README.md) | Filter, forecast (SARIMAX), and export artefacts. | `uv run python examples/sales-dashboard/forecasting_app.py` |
+| [PDF Briefing](examples/pdf-briefing/README.md) | Parameterised Quarto + Typst report with Gemini commentary. | `uv run python examples/pdf-briefing/app.py` or `uv run python scripts/render_dashboard.py` |
+| [PPT Deck](examples/ppt-deck/README.md) | Placeholder for a Quarto → PowerPoint workflow. | _Contribute your story_ |
 
-## Setup
+All examples add `src/` to `PYTHONPATH` on launch, so imports Just Work™ once you have `uv sync`’d.
 
-If you are on macOS, open **Terminal**. On Windows, use **PowerShell** or **Git Bash**.
+## Reusable helpers
 
-1. **Clone the repository**
+- `src/quarto_mssql_gemini/config.py` – typed settings loader for MSSQL and Gemini credentials.
+- `src/quarto_mssql_gemini/data_access.py` – database engine creation, query runners, schema introspection.
+- `src/quarto_mssql_gemini/ai/` – wrappers around `google-genai`/`google-generativeai` for consistent copy.
 
-   ```bash
-   git clone https://github.com/kirenz/gradio-mssql-gemini.git
-   ```
+Import from the package anywhere (Gradio app, Quarto notebook, script) to avoid duplicating boilerplate.
 
-   ```bash
-   cd gradio-mssql-gemini
-   ```
+## Tooling aids
 
-2. **Install the project environment**
+- `scripts/render_dashboard.py` – validates the environment and renders the PDF briefing end-to-end.
+- `scripts/render_all.sh` – runs every render helper; extend it as you add new stories.
+- `.gitignore` keeps generated artefacts in `examples/*/outputs/` out of version control. Each folder ships with an `outputs/.gitignore` so you can safely generate locally.
 
-   ```bash
-   uv sync
-   ```
+## Learn more
 
-   All required Python packages (Gradio, Gemini SDK, SQL tooling, charting, etc.) are installed into an isolated uv environment.
+- [Quick Start](docs/quickstart.md) – screenshot-free checklist to get productive fast.
+- [Architecture](docs/architecture.md) – explains the new project layout.
+- [Extending](docs/extending.md) – how to add prompts, scripts, or brand-new examples.
 
-3. **Configure environment variables**
-
-   ```bash
-   cp .env.example .env
-   ```
-
-   Edit `.env` and supply your credentials:
-
-   - Natural-language assistants (`natural_language/`):
-     - `MSSQL_SERVER`, `MSSQL_DATABASE`, `MSSQL_USERNAME`, `MSSQL_PASSWORD`, `MSSQL_DRIVER`, optional `TRUST_SERVER_CERTIFICATE`
-     - `GEMINI_API_KEY` (create one in [Google AI Studio](https://aistudio.google.com/))
-   - Forecasting + reporting (`forecasting/`, `reporting/`):
-     - Use the same SQL Server credentials: `MSSQL_SERVER`, `MSSQL_DATABASE`, `MSSQL_USERNAME`, `MSSQL_PASSWORD`, `MSSQL_DRIVER`, optional `TRUST_SERVER_CERTIFICATE`
-
-   Keep API keys and passwords private; avoid committing `.env`.
-
-4. **(Optional) Open the project in your editor**
-
-   ```bash
-   code .
-   ```
-
-   Any IDE works as long as it points to this folder.
-
-## Run the apps
-
-Each app lives in its own subdirectory. Change into that folder before launching so relative paths resolve correctly.
-
-### Natural-language SQL assistants
-
-These rely on Gemini to translate plain-language prompts into SQL and then package the results in different ways.
-
-```bash
-cd natural_language
-```
-
-```bash
-uv run python app_df.py
-```
-
-Launches the streamlined chat assistant. It returns Gemini’s SQL alongside a DataFrame preview you can explore or download.
-
-```bash
-uv run python app_plot.py
-```
-
-Adds automated visualisation. Gemini selects an Altair chart type, renders it, and writes a short narrative that highlights trends.
-
-```bash
-uv run python app_speech.py
-```
-
-Enables microphone capture and audio playback so you can converse with the data hands-free—handy for demos or accessibility needs.
-
-The scripts print a local Gradio URL (default `http://127.0.0.1:7860`). Open it in your browser, try the prebuilt examples to confirm connectivity, then ask your own questions.
-
-### Forecasting dashboard
-
-```bash
-cd forecasting
-```
-
-```bash
-uv run python forecasting_app.py
-```
-
-Opens an interactive time-series lab. Choose organisational filters, generate SARIMAX forecasts with configurable horizons, grab Excel summaries, and review the historical, forecast, and seasonal plots saved to `forecasting/outputs/`.
-
-### Reporting automation
-
-```bash
-cd reporting
-```
-
-```bash
-uv run python app.py
-```
-
-Presents a Gradio front end for templated reporting. Select valid data combinations, persist them to `current_filters.json`, run Quarto against `sales_pdf.qmd`, and retrieve a polished `sales_pdf.pdf`. 
-
-Install the [Quarto CLI](https://quarto.org/docs/download/) separately and ensure it is on your `PATH`.
-
-### Analysis AI collateral
-
-Static deliverables (dashboards, PDFs, PowerPoints) live in `analysis_ai/`. They render prebuilt Quarto documents for Germany-only slices of the data, call Gemini (`gemini-2.0-flash`) for concise commentary, and save the outputs to disk—no Gradio interface. Use this folder when you need a ready-to-hand asset rather than an interactive app.
-
-By contrast, everything in `reporting/` is dynamic: the Gradio UI filters any geography or product combination, writes those filters into `current_filters.json`, regenerates `sales_pdf.pdf` on demand, and relies on Gemini for contextual explanations. Launch `reporting/app.py` when you need live filtering and on-the-fly report generation.
-
-
-## Core dependencies
-
-- `gradio` – UI framework for the assistants, forecasting dashboard, and reporting controls.
-- `google-genai` – Official SDK for interacting with Gemini models.
-- `sqlalchemy` + `pyodbc` – Database connectivity for SQL Server.
-- `pandas` / `numpy` – Data handling for queries, forecasts, and report assembly.
-- `altair` – Charting for the plotting assistant and forecast visualisations.
-- `statsmodels` – SARIMAX implementation used in the forecasting module.
-- `python-dotenv` – Loads `.env` so secrets stay out of source control.
-- `soundfile` – Audio I/O used by the speech-enabled assistant.
-
-## Next steps
-
-- Fine-tune the Gemini prompts inside `natural_language/` to enforce custom SQL policies or guardrails.
-- Extend the forecasting filters and model configuration in `forecasting/sales_forecaster.py` for your business metrics.
-- Customise the Quarto template in `reporting/sales_pdf.qmd` to match your preferred layout and branding.
-- Package the apps for deployment (e.g., Docker, Gradio Hub, Azure App Service) once the workflows match your production needs.
+Questions or contributions? Open an issue or send a PR.

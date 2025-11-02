@@ -1,0 +1,398 @@
+---
+title: "Sales Analysis Report"
+subtitle: "With AI generated explanations"
+author: Mike Farmer
+date: today
+date-format: long
+output-dir: outputs
+format:
+  typst:
+    mainfont: "Agbalumo"
+    columns: 1
+    papersize: a4
+    toc: true
+    toc-depth: 2
+    number-sections: true
+    toc-page-break: true
+jupyter:
+  kernelspec:
+    name: gradio-mssql-gemini
+    display_name: gradio-mssql-gemini
+    language: python
+---
+
+
+```{=typst}
+#let analysis-box(content) = {
+  block(
+    fill: rgb("#f1f5f9"),
+    inset: 1em,
+    radius: 4pt,
+    width: 100%,
+  )[
+    #text(weight: "bold")[AI Analysis]
+    #v(0.5em)
+    #content
+  ]
+}
+```
+
+```{python}
+#| echo: false
+#| output: asis
+
+import pandas as pd
+import altair as alt
+import os
+import json
+from datetime import datetime
+import sys
+from pathlib import Path
+
+src_path = Path.cwd().resolve().parents[2] / "src"
+if str(src_path) not in sys.path:
+    sys.path.insert(0, str(src_path))
+
+from quarto_mssql_gemini import get_sales_data
+from quarto_mssql_gemini.ai import get_plot_description
+
+# Create output directory for plots
+output_dir = 'outputs/plots'
+os.makedirs(output_dir, exist_ok=True)
+
+# Function to get relative path for images
+def get_image_path(filename):
+    return f"./outputs/plots/{filename}"
+
+# Load filters from JSON file
+filters_file = 'current_filters.json'
+if os.path.exists(filters_file):
+    with open(filters_file, 'r') as f:
+        filters = json.load(f)
+else:
+    filters = {
+        'sales_org': "All",
+        'country': "All",
+        'region': "All",
+        'city': "All",
+        'product_line': "All",
+        'product_category': "All"
+    }
+
+# Get the data with filters
+df_sales = get_sales_data(**filters)
+
+# Sort by date
+df_sales = df_sales.sort_values('Calendar DueDate')
+
+# Add filter information for context
+filters_used = {
+    'Sales Organization': filters['sales_org'],
+    'Country': filters['country'],
+    'Region': filters['region'],
+    'City': filters['city'],
+    'Product Line': filters['product_line'],
+    'Product Category': filters['product_category']
+}
+
+# Create filter text for display
+def format_filter_value(value):
+    if value == "All":
+        return value
+    if isinstance(value, list):
+        return ", ".join(value)
+    return str(value)
+
+active_filters = [
+    f"{k.replace('_', ' ').title()}: {format_filter_value(v)}" 
+    for k, v in filters.items() 
+    if v != "All"
+]
+filter_text = "No filters applied" if not active_filters else "\n".join(active_filters)
+
+# print(f"""Applied Filters
+
+# {filter_text}
+# """)
+
+print(f'''```{{=typst}}
+#analysis-box[
+  {filter_text}
+]
+```''')
+```
+
+
+
+
+
+```{=typst}
+#pagebreak()
+```
+
+# Sales Performance Overview 
+
+```{python}
+#| echo: false
+#| output: asis
+
+# Helper function to get the primary group by field
+def get_primary_dimension():
+    non_all_filters = {k: v for k, v in filters.items() if v != "All"}
+    dimension_mapping = {
+        'city': 'Sales City',
+        'region': 'Sales Region',
+        'country': 'Sales Country',
+        'sales_org': 'Sales Organisation',
+        'product_category': 'Product Category',
+        'product_line': 'Product Line'
+    }
+    
+    # Return first non-"All" filter's corresponding dimension
+    for key in ['city', 'region', 'country', 'sales_org', 'product_category', 'product_line']:
+        if key in non_all_filters:
+            return dimension_mapping[key]
+    return 'Calendar Month'  # default if no specific filters
+
+# Create chart based on filters
+primary_dim = get_primary_dimension()
+
+if primary_dim == 'Calendar Month':
+    # Single line chart for total revenue
+    summary = df_sales.groupby('Calendar Month')[['Revenue EUR']].sum().reset_index()
+    chart = alt.Chart(summary).mark_line(point=True).encode(
+        x=alt.X('Calendar Month:O', title='Month'),
+        y=alt.Y('Revenue EUR:Q', title='Revenue (EUR)'),
+        tooltip=['Calendar Month', 'Revenue EUR']
+    )
+else:
+    # Multi-line chart grouped by the primary dimension
+    summary = df_sales.groupby(['Calendar Month', primary_dim])[['Revenue EUR']].sum().reset_index()
+    chart = alt.Chart(summary).mark_line(point=True).encode(
+        x=alt.X('Calendar Month:O', title='Month'),
+        y=alt.Y('Revenue EUR:Q', title='Revenue (EUR)'),
+        color=alt.Color(f'{primary_dim}:N', title=primary_dim.replace('Sales ', '')),
+        tooltip=['Calendar Month', primary_dim, 'Revenue EUR']
+    )
+
+chart = chart.properties(
+    width=800,
+    height=400,
+    title='Monthly Revenue by ' + primary_dim.replace('Sales ', '')
+)
+
+# Save and display chart
+chart.save(os.path.join(output_dir, 'monthly_revenue.png'))
+print(f"![Monthly Revenue Chart]({get_image_path('monthly_revenue.png')})")
+
+# Prepare metrics for AI analysis
+monthly_metrics = {
+    'Total Revenue': f"€{summary['Revenue EUR'].sum():,.0f}",
+    'Average Monthly Revenue': f"€{summary['Revenue EUR'].mean():,.0f}",
+    'Peak Month': f"{summary['Revenue EUR'].idxmax()} (€{summary['Revenue EUR'].max():,.0f})",
+    'Lowest Month': f"{summary['Revenue EUR'].idxmin()} (€{summary['Revenue EUR'].min():,.0f})"
+}
+
+# Format metrics for the prompt
+monthly_metrics_text = "\n".join(f"{k}: {v}" for k, v in monthly_metrics.items())
+
+# Generate AI description
+monthly_analysis = get_plot_description(
+    "Monthly revenue trends",
+    monthly_metrics_text
+)
+
+print(f'''```{{=typst}}
+#analysis-box[
+  {monthly_analysis}
+]
+```''')
+
+```
+
+
+
+```{=typst}
+#pagebreak()
+```
+
+# Detailed Analysis
+
+```{python}
+#| echo: false
+#| output: asis
+
+def get_geo_dimension():
+    """Get the most specific geographic dimension that was filtered"""
+    geo_hierarchy = [
+        ('city', 'Sales City'),
+        ('region', 'Sales Region'),
+        ('country', 'Sales Country'),
+        ('sales_org', 'Sales Organisation')
+    ]
+    
+    for filter_key, dim_name in geo_hierarchy:
+        if filters[filter_key] != "All":
+            return dim_name
+    return 'Sales City'  # default if no geo filters
+
+# Get the geographic dimension to use
+geo_dim = get_geo_dimension()
+
+# Create cross-tabulation of Product Category and Geographic dimension
+cross_tab = df_sales.pivot_table(
+    values=['Revenue EUR', 'Gross Profit EUR'],
+    index='Product Category',
+    columns=geo_dim,
+    aggfunc='sum',
+    fill_value=0
+).round(2)
+
+# Format the cross-tab for display
+def format_currency(x):
+    return f'€{x:,.0f}'
+
+cross_tab_styled = cross_tab.style.format(format_currency)
+
+print("## Cross-tabulation Analysis")
+print(f"\nRevenue and Profit by Product Category and {geo_dim.replace('Sales ', '')}")
+display(cross_tab_styled)
+
+# Create visualization
+melted_data = df_sales.groupby(['Product Category', geo_dim])[['Revenue EUR']].sum().reset_index()
+
+# Create grouped bar chart
+analysis_chart = alt.Chart(melted_data).mark_bar().encode(
+    x=alt.X('Product Category:N', title='Product Category'),
+    y=alt.Y('Revenue EUR:Q', title='Revenue (EUR)'),
+    color=alt.Color(f'{geo_dim}:N', title=geo_dim.replace('Sales ', '')),
+    tooltip=['Product Category', geo_dim, 'Revenue EUR']
+).properties(
+    width=800,
+    height=400,
+    title=f'Revenue by Product Category and {geo_dim.replace("Sales ", "")}'
+)
+
+# Save and display chart
+analysis_chart.save(os.path.join(output_dir, 'analysis_revenue.png'))
+print(f"\n![Analysis Revenue Chart]({get_image_path('analysis_revenue.png')})")
+
+# Prepare metrics for AI analysis
+analysis_metrics = {
+    'Total Revenue by Category': dict(df_sales.groupby('Product Category')['Revenue EUR'].sum()),
+    f'Revenue by {geo_dim}': dict(df_sales.groupby(geo_dim)['Revenue EUR'].sum()),
+    'Top Combination': (
+        f"{melted_data.iloc[melted_data['Revenue EUR'].idxmax()]['Product Category']} in "
+        f"{melted_data.iloc[melted_data['Revenue EUR'].idxmax()][geo_dim]}: "
+        f"€{melted_data['Revenue EUR'].max():,.0f}"
+    )
+}
+
+# Format metrics for the prompt
+analysis_metrics_text = "\n".join(f"{k}: {v}" for k, v in analysis_metrics.items())
+
+# Generate AI description with context
+analysis_context = f"Analysis of Product Categories across {geo_dim.replace('Sales ', '')}s"
+analysis_description = get_plot_description(
+    analysis_context,
+    analysis_metrics_text,
+    filter_text
+)
+
+print(f'''```{{=typst}}
+#analysis-box[
+  {analysis_description}
+]
+```''')
+
+```
+
+
+```{=typst}
+#pagebreak()
+```
+
+# Product Category Performance 
+
+```{python}
+#| echo: false
+#| output: asis
+
+# Function to get comparison dimension
+def get_comparison_dimension():
+    non_all_filters = {k: v for k, v in filters.items() if v != "All"}
+    if 'city' in non_all_filters:
+        return 'Sales City'
+    elif 'region' in non_all_filters:
+        return 'Sales Region'
+    elif 'country' in non_all_filters:
+        return 'Sales Country'
+    return 'Product Category'
+
+comparison_dim = get_comparison_dimension()
+
+# Create summary with both Product Category and comparison dimension
+if comparison_dim != 'Product Category':
+    product_summary = df_sales.groupby(['Product Category', comparison_dim]).agg({
+        'Sales Amount': 'sum',
+        'Revenue EUR': 'sum',
+        'Gross Profit EUR': 'sum'
+    }).reset_index()
+    
+    # Create grouped bar chart
+    product_chart = alt.Chart(product_summary).mark_bar().encode(
+        x=alt.X('Product Category:N', title='Product Category', axis=alt.Axis(labelAngle=0)),
+        y=alt.Y('Revenue EUR:Q', title='Revenue (EUR)'),
+        color=alt.Color(f'{comparison_dim}:N', title=comparison_dim.replace('Sales ', '')),
+        tooltip=['Product Category', comparison_dim, 'Revenue EUR', 'Gross Profit EUR']
+    ).properties(
+        width=800,
+        height=400,
+        title=f'Revenue by Product Category and {comparison_dim.replace("Sales ", "")}'
+    )
+else:
+    # Original single dimension chart
+    product_summary = df_sales.groupby('Product Category').agg({
+        'Sales Amount': 'sum',
+        'Revenue EUR': 'sum',
+        'Gross Profit EUR': 'sum'
+    }).reset_index()
+    
+    product_chart = alt.Chart(product_summary).mark_bar().encode(
+        x=alt.X('Product Category:N', title='Product Category', axis =alt.Axis(labelAngle=0)),
+        y=alt.Y('Revenue EUR:Q', title='Revenue (EUR)'),
+        tooltip=['Product Category', 'Revenue EUR', 'Gross Profit EUR']
+    ).properties(
+        width=800,
+        height=400,
+        title='Revenue by Product Category'
+    )
+
+# Save and display chart
+product_chart.save(os.path.join(output_dir, 'product_revenue.png'))
+print(f"![Product Category Revenue Chart]({get_image_path('product_revenue.png')})")
+
+# Prepare metrics for AI analysis
+product_metrics = {
+    'Top Category': f"{product_summary.index[0]} (€{product_summary['Revenue EUR'].max():,.0f})",
+    'Bottom Category': f"{product_summary.index[-1]} (€{product_summary['Revenue EUR'].min():,.0f})",
+    'Category Revenue Share': dict(zip(product_summary.index, 
+                                     (product_summary['Revenue EUR'] / product_summary['Revenue EUR'].sum() * 100).round(1)))
+}
+
+# Format metrics for the prompt
+product_metrics_text = "\n".join(f"{k}: {v}" for k, v in product_metrics.items())
+
+# Generate AI description
+product_analysis = get_plot_description(
+    "Product category revenue distribution",
+    product_metrics_text
+)
+
+print(f'''```{{=typst}}
+#analysis-box[
+  {product_analysis}
+]
+```''')
+
+```
