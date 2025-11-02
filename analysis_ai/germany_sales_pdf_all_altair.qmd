@@ -1,0 +1,253 @@
+---
+title: "Germany: Sales Analysis"
+subtitle: "With AI generated explanations"
+author: Kärcher Store Stuttgart
+date: today
+date-format: long
+format:
+  typst:
+    mainfont: "Agbalumo"
+    columns: 1
+    papersize: a4
+    toc: true
+    toc-depth: 2
+    number-sections: true
+    toc-page-break: true
+jupyter:
+  kernelspec:
+    name: gradio-mssql-gemini
+    display_name: gradio-mssql-gemini
+    language: python
+---
+
+```{python}
+#| echo: false
+import pandas as pd
+from ai_analysis import get_plot_description
+from db_setup import get_germany_sales_data
+import altair as alt
+import os
+from datetime import datetime
+# Create output directory for plots - using relative path
+output_dir = 'plots'  # This will create a 'plots' directory in the same folder as the qmd file
+os.makedirs(output_dir, exist_ok=True)
+# Function to get relative path for images
+def get_image_path(filename):
+    return f"./plots/{filename}"
+```
+
+```{python}
+#| echo: false
+# Get the data
+df = get_germany_sales_data()
+# Filter data for Germany
+germany_sales = df[df['Sales Country'] == 'Germany'].copy()
+# Sort by date
+germany_sales = germany_sales.sort_values('Calendar DueDate')
+```
+
+
+```{=typst}
+#let analysis-box(content) = {
+  block(
+    fill: rgb("#f1f5f9"),
+    inset: 1em,
+    radius: 4pt,
+    width: 100%,
+  )[
+    #text(weight: "bold")[AI Analysis]
+    #v(0.5em)
+    #content
+  ]
+}
+```
+
+```{=typst}
+#pagebreak()
+```
+
+# Sales Performance Overview 
+
+```{python}
+#| echo: false
+#| output: asis
+# Create a summary of key metrics
+summary = germany_sales.groupby('Calendar Month')[['Sales Amount', 'Revenue EUR', 'Gross Profit EUR']].sum().reset_index()
+
+# Create monthly revenue chart with Altair
+monthly_chart = alt.Chart(summary).mark_line(point=True).encode(
+    x=alt.X('Calendar Month:O', title='Month'),
+    y=alt.Y('Revenue EUR:Q', title='Revenue (EUR)'),
+    tooltip=['Calendar Month', 'Revenue EUR']
+).properties(
+    width=800,
+    height=400,
+    title='Monthly Revenue'
+)
+
+# Save the chart with simple filename
+monthly_chart.save(os.path.join(output_dir, 'monthly_revenue.png'))
+
+# Display the saved image in the report using relative path
+print(f"![Monthly Revenue Chart]({get_image_path('monthly_revenue.png')})")
+
+# Prepare metrics for AI analysis
+monthly_metrics = {
+    'Total Revenue': f"€{summary['Revenue EUR'].sum():,.0f}",
+    'Average Monthly Revenue': f"€{summary['Revenue EUR'].mean():,.0f}",
+    'Peak Month': f"{summary['Revenue EUR'].idxmax()} (€{summary['Revenue EUR'].max():,.0f})",
+    'Lowest Month': f"{summary['Revenue EUR'].idxmin()} (€{summary['Revenue EUR'].min():,.0f})"
+}
+
+# Format metrics for the prompt
+monthly_metrics_text = "\n".join(f"{k}: {v}" for k, v in monthly_metrics.items())
+
+# Generate AI description
+monthly_analysis = get_plot_description(
+    "Monthly revenue trends in Germany",
+    monthly_metrics_text
+)
+
+print(f'''```{{=typst}}
+#analysis-box[
+  {monthly_analysis}
+]
+```''')
+
+```
+
+
+
+```{=typst}
+#pagebreak()
+```
+
+# Regional Analysis
+
+```{python}
+#| echo: false
+#| output: asis
+# Analyze sales by region in Germany
+region_summary = germany_sales.groupby('Sales Region').agg({
+    'Sales Amount': 'sum',
+    'Revenue EUR': 'sum',
+    'Gross Profit EUR': 'sum'
+}).round(2)
+
+# Convert to more presentable format
+region_summary_styled = region_summary.style.format({
+    'Sales Amount': '{:,.0f}',
+    'Revenue EUR': '€{:,.0f}',
+    'Gross Profit EUR': '€{:,.0f}'
+})
+
+display(region_summary_styled)
+
+# Prepare metrics for AI analysis
+region_metrics = {
+    'Total Revenue by Region': region_summary['Revenue EUR'].to_dict(),
+    'Top Region': f"{region_summary['Revenue EUR'].idxmax()} (€{region_summary['Revenue EUR'].max():,.0f})",
+    'Total Profit by Region': region_summary['Gross Profit EUR'].to_dict()
+}
+
+# Format metrics for the prompt
+region_metrics_text = "\n".join(f"{k}: {v}" for k, v in region_metrics.items())
+
+# Generate AI description
+region_analysis = get_plot_description(
+    "Regional sales performance across German territories",
+    region_metrics_text
+)
+
+print(f'''```{{=typst}}
+#analysis-box[
+  {region_analysis}
+]
+```''')
+
+# Regional analysis remains same until visualization
+region_summary_df = region_summary.reset_index()
+
+# Create and save regional comparison chart
+region_chart = alt.Chart(region_summary_df).mark_bar().encode(
+    x=alt.X('Sales Region:N', title='Region', axis=alt.Axis(labelAngle=0)),
+    y=alt.Y('Revenue EUR:Q', title='Revenue (EUR)'),
+    tooltip=['Sales Region', 'Revenue EUR', 'Gross Profit EUR']
+).properties(
+    width=800,
+    height=400,
+    title='Revenue by Region'
+)
+
+# Save the chart with simple filename
+region_chart.save(os.path.join(output_dir, 'region_revenue.png'))
+
+# Display the saved image in the report using relative path
+print(f"![Regional Revenue Chart]({get_image_path('region_revenue.png')})")
+
+```
+
+
+```{=typst}
+#pagebreak()
+```
+
+# Product Category Performance 
+
+```{python}
+#| echo: false
+#| output: asis
+# Calculate product category summary
+product_summary = germany_sales.groupby('Product Category').agg({
+    'Sales Amount': 'sum',
+    'Revenue EUR': 'sum',
+    'Gross Profit EUR': 'sum'
+}).sort_values('Revenue EUR', ascending=False)
+
+# Prepare metrics for AI analysis
+product_metrics = {
+    'Top Category': f"{product_summary.index[0]} (€{product_summary['Revenue EUR'].max():,.0f})",
+    'Bottom Category': f"{product_summary.index[-1]} (€{product_summary['Revenue EUR'].min():,.0f})",
+    'Category Revenue Share': dict(zip(product_summary.index, 
+                                     (product_summary['Revenue EUR'] / product_summary['Revenue EUR'].sum() * 100).round(1)))
+}
+
+# Format metrics for the prompt
+product_metrics_text = "\n".join(f"{k}: {v}" for k, v in product_metrics.items())
+
+# Generate AI description
+product_analysis = get_plot_description(
+    "Product category revenue distribution",
+    product_metrics_text
+)
+
+print(f'''```{{=typst}}
+#analysis-box[
+  {product_analysis}
+]
+```''')
+
+# Product category analysis
+product_summary_df = product_summary.reset_index()
+
+# Create and save product category chart
+product_chart = alt.Chart(product_summary_df).mark_bar().encode(
+    x=alt.X('Product Category:N', 
+            title='Product Category',
+            sort='-y', axis=alt.Axis(labelAngle=0)),
+    y=alt.Y('Revenue EUR:Q', 
+            title='Revenue (EUR)'),
+    tooltip=['Product Category', 'Revenue EUR', 'Gross Profit EUR']
+).properties(
+    width=800,
+    height=400,
+    title='Revenue by Product Category'
+)
+
+# Save the chart with simple filename
+product_chart.save(os.path.join(output_dir, 'product_revenue.png'))
+
+# Display the saved image in the report using relative path
+print(f"![Product Category Revenue Chart]({get_image_path('product_revenue.png')})")
+
+```

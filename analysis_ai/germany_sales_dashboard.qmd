@@ -1,0 +1,183 @@
+---
+title: "German Sales Dashboard"
+author: Mike Farmer
+date: today
+date-format: long
+format:
+  dashboard:
+    theme: cosmo
+jupyter:
+  kernelspec:
+    name: gradio-mssql-gemini
+    display_name: gradio-mssql-gemini
+    language: python
+---
+
+# Sales Metrics {.sidebar}
+
+## Sales Metrics
+
+```{python}
+#| echo: false
+#| output: false
+
+import pandas as pd
+import altair as alt
+from db_setup import get_germany_sales_data
+from ai_analysis import get_plot_description
+
+# Enable Altair data transformer
+alt.data_transformers.enable('default')
+
+# Get and prepare the data
+df = get_germany_sales_data()
+germany_sales = df[df['Sales Country'] == 'Germany'].copy()
+germany_sales = germany_sales.sort_values('Calendar DueDate')
+```
+
+```{python}
+#| component: valuebox
+#| title: "Total Revenue"
+#| icon: currency-euro
+#| color: green
+total_revenue = germany_sales['Revenue EUR'].sum()
+f"€{total_revenue:,.0f}"
+```
+
+```{python}
+#| component: valuebox
+#| title: "Total Sales"
+#| icon: cart
+#| color: blue
+total_sales = germany_sales['Sales Amount'].sum()
+f"{total_sales:,.0f}"
+```
+
+```{python}
+#| component: valuebox
+#| title: "Average Profit"
+#| icon: graph-up-arrow
+#| color: purple
+avg_profit = germany_sales['Gross Profit EUR'].mean()
+f"€{avg_profit:,.0f}"
+```
+
+# Main Content
+
+## Row {height=60%}
+
+```{python}
+#| title: Monthly Revenue Trend
+#| echo: false
+#| output-location: column
+monthly_revenue = germany_sales.groupby('Calendar Month')[['Revenue EUR']].sum().reset_index()
+
+line_chart = alt.Chart(monthly_revenue).mark_line(point=True).encode(
+    x='Calendar Month:N',
+    y=alt.Y('Revenue EUR:Q', title='Revenue (EUR)'),
+    tooltip=['Calendar Month', 'Revenue EUR']
+).properties(
+    title='Monthly Revenue Trend',
+    height=300
+).configure_axis(
+    labelAngle=45
+)
+
+line_chart
+```
+
+```{python}
+#| echo: false
+#| output: asis
+monthly_metrics = {
+    'Total Revenue': f"€{monthly_revenue['Revenue EUR'].sum():,.0f}",
+    'Average Monthly Revenue': f"€{monthly_revenue['Revenue EUR'].mean():,.0f}",
+    'Peak Month': f"{monthly_revenue['Revenue EUR'].max():,.0f}"
+}
+monthly_metrics_text = "\n".join(f"{k}: {v}" for k, v in monthly_metrics.items())
+monthly_analysis = get_plot_description(
+    "Monthly revenue trends in Germany",
+    monthly_metrics_text
+)
+
+print("### AI Analysis\n\n" + monthly_analysis + "\n\n")
+```
+
+
+
+## Row {height=40%}
+
+### Column {width=50%}
+
+```{python}
+#| title: Regional Performance
+#| echo: false
+#| output-location: column
+region_summary = germany_sales.groupby('Sales Region').agg({
+    'Revenue EUR': 'sum'
+}).reset_index()
+
+bar_chart = alt.Chart(region_summary).mark_bar().encode(
+    y=alt.Y('Sales Region:N', sort='-x'),
+    x=alt.X('Revenue EUR:Q', title='Revenue (EUR)'),
+    tooltip=['Sales Region', 'Revenue EUR']
+).properties(
+    title='Revenue by Region',
+    height=200
+)
+
+bar_chart
+```
+
+```{python}
+#| echo: false
+#| output: asis
+region_metrics = {
+    'Total Revenue by Region': region_summary.set_index('Sales Region')['Revenue EUR'].to_dict(),
+    'Top Region': f"{region_summary.loc[region_summary['Revenue EUR'].idxmax(), 'Sales Region']}"
+}
+region_metrics_text = "\n".join(f"{k}: {v}" for k, v in region_metrics.items())
+region_analysis = get_plot_description(
+    "Regional sales performance in Germany",
+    region_metrics_text
+)
+
+print("### AI Analysis\n\n" + region_analysis + "\n\n")
+```
+
+
+### Column {width=50%}
+
+```{python}
+#| title: Product Category Distribution
+#| echo: false
+#| output-location: column
+product_summary = germany_sales.groupby('Product Category')['Revenue EUR'].sum().reset_index()
+
+pie_chart = alt.Chart(product_summary).mark_arc().encode(
+    theta='Revenue EUR:Q',
+    color='Product Category:N',
+    tooltip=['Product Category', 'Revenue EUR']
+).properties(
+    title='Revenue by Product Category',
+    height=200
+)
+
+pie_chart
+```
+
+```{python}
+#| echo: false
+#| output: asis
+product_metrics = {
+    'Top Category': f"{product_summary.loc[product_summary['Revenue EUR'].idxmax(), 'Product Category']}",
+    'Category Distribution': product_summary.set_index('Product Category')['Revenue EUR'].to_dict()
+}
+product_metrics_text = "\n".join(f"{k}: {v}" for k, v in product_metrics.items())
+product_analysis = get_plot_description(
+    "Product category distribution in Germany",
+    product_metrics_text
+)
+
+print("### AI Analysis\n\n" + product_analysis + "\n\n")
+```

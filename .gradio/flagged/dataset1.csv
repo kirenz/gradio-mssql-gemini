@@ -1,0 +1,18 @@
+Ask a question about the data,Response,timestamp
+Show me the top 5 products by revenue in descending order,"Question:
+Show me the top 5 products by revenue in descending order
+
+SQL Query:
+SELECT TOP 5 Material_Description, SUM(Revenue) as Total_Revenue 
+FROM dbo.DataSet_Monthly_Sales 
+GROUP BY Material_Description 
+ORDER BY Total_Revenue DESC
+
+Results:
+Material_Description                         Total_Revenue
+-------------------------------------------  ---------------
+Race Bike Modell Beluga Speed, 21 Gear, 28""  2,045,609,158
+City Bike, Modell Zurich, 21 Gear, 26""       1,855,578,875
+Race Bike Modell OCR 1.0, 21 Gear, 28""       1,839,380,341
+MTB Modell Piz Buin SE 9000, 21 Gear         1,564,421,811
+City Bike, Modell Amsterdam, 21 Gear, 28""    1,502,075,765",2025-02-15 15:01:14.826417

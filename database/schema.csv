@@ -1,0 +1,193 @@
+TABLE_SCHEMA,TABLE_NAME,COLUMN_NAME,DATA_TYPE,CHARACTER_MAXIMUM_LENGTH,IS_NULLABLE
+dbo,DataSet_Monthly_Sales,Calendar_Year,char,4,NO
+dbo,DataSet_Monthly_Sales,Calendar_Quarter,char,1,NO
+dbo,DataSet_Monthly_Sales,Calendar_Month,char,7,NO
+dbo,DataSet_Monthly_Sales,Global_Region,nvarchar,50,NO
+dbo,DataSet_Monthly_Sales,Sales_Country,nvarchar,50,NO
+dbo,DataSet_Monthly_Sales,Country_Region,nvarchar,50,NO
+dbo,DataSet_Monthly_Sales,Sales_Office,nvarchar,50,NO
+dbo,DataSet_Monthly_Sales,Local_Currency,char,3,NO
+dbo,DataSet_Monthly_Sales,Sales_Channel,nvarchar,50,NO
+dbo,DataSet_Monthly_Sales,Material_Number,nvarchar,50,NO
+dbo,DataSet_Monthly_Sales,Material_Description,nvarchar,100,NO
+dbo,DataSet_Monthly_Sales,Product_Line,nvarchar,50,NO
+dbo,DataSet_Monthly_Sales,Product_Category,nvarchar,50,NO
+dbo,DataSet_Monthly_Sales,Revenue,money,NULL,NO
+dbo,DataSet_Monthly_Sales,Revenue_EUR,money,NULL,NO
+dbo,DataSet_Monthly_Sales,Discount,money,NULL,NO
+dbo,DataSet_Monthly_Sales,Discount_EUR,money,NULL,NO
+dbo,DataSet_Monthly_Sales,Sales_Amount,int,NULL,NO
+dbo,DataSet_Monthly_Sales,Transfer_Price_EUR,money,NULL,NO
+dbo,DataSet_Monthly_Sales,Currency_Rate,money,NULL,NO
+dbo,DataSet_Monthly_Sales,Refresh_Date,datetime,NULL,YES
+dbo,DataSet_Monthly_Sales_and_Quota,Sales Organisation,nvarchar,50,NO
+dbo,DataSet_Monthly_Sales_and_Quota,Sales Country,nvarchar,50,NO
+dbo,DataSet_Monthly_Sales_and_Quota,Sales Region,nvarchar,50,NO
+dbo,DataSet_Monthly_Sales_and_Quota,Sales City,nvarchar,50,NO
+dbo,DataSet_Monthly_Sales_and_Quota,Sales State,nvarchar,50,YES
+dbo,DataSet_Monthly_Sales_and_Quota,Product Line,nvarchar,50,NO
+dbo,DataSet_Monthly_Sales_and_Quota,Product Category,nvarchar,50,NO
+dbo,DataSet_Monthly_Sales_and_Quota,Calendar Year,char,4,NO
+dbo,DataSet_Monthly_Sales_and_Quota,Calendar Quarter,char,1,NO
+dbo,DataSet_Monthly_Sales_and_Quota,Calendar Month ISO,char,7,NO
+dbo,DataSet_Monthly_Sales_and_Quota,Calendar Month,nvarchar,15,YES
+dbo,DataSet_Monthly_Sales_and_Quota,Calendar DueDate,date,NULL,YES
+dbo,DataSet_Monthly_Sales_and_Quota,Sales Amount Quota,numeric,NULL,YES
+dbo,DataSet_Monthly_Sales_and_Quota,Revenue Quota,money,NULL,YES
+dbo,DataSet_Monthly_Sales_and_Quota,Sales Amount,numeric,NULL,YES
+dbo,DataSet_Monthly_Sales_and_Quota,Revenue EUR,money,NULL,YES
+dbo,DataSet_Monthly_Sales_and_Quota,Discount EUR,money,NULL,YES
+dbo,DataSet_Monthly_Sales_and_Quota,Discount Quota,money,NULL,YES
+dbo,DataSet_Monthly_Sales_and_Quota,Transfer Price EUR,money,NULL,YES
+dbo,DataSet_Monthly_Sales_and_Quota,Gross Profit EUR,money,NULL,YES
+dbo,DataSet_Monthly_Sales_and_Quota,Gross Profit Quota,money,NULL,YES
+dbo,DataSet_Monthly_Sales_and_Quota,Revenue Diff,money,NULL,YES
+dbo,DataSet_Monthly_Sales_and_Quota,Sales Amount Diff,numeric,NULL,YES
+dbo,DataSet_Monthly_Sales_and_Quota,Gross Profit Diff,money,NULL,YES
+dbo,DataSet_Monthly_Sales_and_Quota,Discount Diff,money,NULL,YES
+dbo,DataSet_Monthly_Sales_and_Quota,Revenue KPII,int,NULL,NO
+dbo,DataSet_Monthly_Sales_and_Quota,Sales Amount KPII,int,NULL,NO
+dbo,DataSet_Monthly_Sales_and_Quota,Gross Profit KPII,int,NULL,NO
+dbo,DataSet_Monthly_Sales_and_Quota,Discount KPII,int,NULL,NO
+dbo,DataSet_Monthly_Sales_and_Quota,Refresh Date,date,NULL,YES
+dbo,DataSet_Monthly_SalesQuota,Calendar_DueDate,date,NULL,YES
+dbo,DataSet_Monthly_SalesQuota,Calendar_Year,char,4,NO
+dbo,DataSet_Monthly_SalesQuota,Calendar_Quarter,char,1,NO
+dbo,DataSet_Monthly_SalesQuota,Calendar_Month_ISO,char,7,NO
+dbo,DataSet_Monthly_SalesQuota,Calendar_Month,nvarchar,15,YES
+dbo,DataSet_Monthly_SalesQuota,Global_Region,nvarchar,50,NO
+dbo,DataSet_Monthly_SalesQuota,Sales_Country,nvarchar,50,NO
+dbo,DataSet_Monthly_SalesQuota,Sales_Office,nvarchar,50,NO
+dbo,DataSet_Monthly_SalesQuota,Local_Currency,char,3,YES
+dbo,DataSet_Monthly_SalesQuota,Product_Category,nvarchar,50,NO
+dbo,DataSet_Monthly_SalesQuota,Sales_Amount_Quota,numeric,NULL,YES
+dbo,DataSet_Monthly_SalesQuota,Revenue_Quota,money,NULL,YES
+dbo,DataSet_Monthly_SalesQuota,Revenue_Quota_EUR,money,NULL,YES
+dbo,DataSet_Monthly_SalesQuota,Refresh_Date,datetime,NULL,NO
+dbo,Dim_Calendar,ID_Calendar,date,NULL,NO
+dbo,Dim_Calendar,Calendar Day ISO,nchar,10,NO
+dbo,Dim_Calendar,Calendar Day,date,NULL,NO
+dbo,Dim_Calendar,Calendar Month ISO,nchar,7,NO
+dbo,Dim_Calendar,Calendar Month Name,nvarchar,10,NO
+dbo,Dim_Calendar,Calendar Month Number,int,NULL,NO
+dbo,Dim_Calendar,Calendar Quarter,nchar,2,NO
+dbo,Dim_Calendar,Calendar Week ISO,nchar,8,NO
+dbo,Dim_Calendar,Calendar Weekday,nvarchar,10,NO
+dbo,Dim_Calendar,Calendar Year,int,NULL,NO
+dbo,Dim_Calendar,Is First Day of Month,nchar,1,NO
+dbo,Dim_Calendar,Is Last Day of Month,nchar,1,NO
+dbo,Dim_Calendar_Month,ID_Calendar_Month,date,NULL,NO
+dbo,Dim_Calendar_Month,Calendar_Month_ISO,nchar,7,NO
+dbo,Dim_Calendar_Month,Calendar_Month_Name,nvarchar,10,NO
+dbo,Dim_Calendar_Month,Calendar_Month_Number,int,NULL,NO
+dbo,Dim_Calendar_Month,Calendar_Quarter,nchar,2,NO
+dbo,Dim_Calendar_Month,Calendar_Year,int,NULL,NO
+dbo,Dim_Calendar_Month,Last_Day_Of_Month,date,NULL,NO
+dbo,Dim_Calendar_Week,ID_Calendar_Week,date,NULL,NO
+dbo,Dim_Calendar_Week,Calendar_Week_ISO,nchar,8,NO
+dbo,Dim_Calendar_Week,Calendar_Year,int,NULL,NO
+dbo,Dim_Calendar_Week,Calendar_Month,nchar,7,YES
+dbo,Dim_Calendar_Week,First_Day_Of_Week,date,NULL,YES
+dbo,Dim_Calendar_Week,Last_Day_Of_Week,date,NULL,YES
+dbo,Dim_Calendar_Week,Days_In_Week_Split_Month,int,NULL,YES
+dbo,Dim_Calendar_Week,ID_Calendar_Month,date,NULL,YES
+dbo,Dim_Currency,ID_Currency,int,NULL,NO
+dbo,Dim_Currency,Currency_ISO_Code,nvarchar,5,NO
+dbo,Dim_Currency,Currency_Name,nvarchar,50,NO
+dbo,Dim_Currency,Currency_Symbol_ID,int,NULL,NO
+dbo,Dim_Currency,Format_String,varchar,50,YES
+dbo,Dim_Planning_Version,ID_Planning_Version,int,NULL,NO
+dbo,Dim_Planning_Version,Growth_Rate,float,NULL,NO
+dbo,Dim_Planning_Version,Planning_Version,nvarchar,50,NO
+dbo,Dim_Price_Segment,ID_Price_Segment,int,NULL,NO
+dbo,Dim_Price_Segment,Price_Segment,nvarchar,50,NO
+dbo,Dim_Product,ID_Product,int,NULL,NO
+dbo,Dim_Product,Material_Description,nvarchar,200,NO
+dbo,Dim_Product,Material_Number,nvarchar,50,NO
+dbo,Dim_Product,Product_Category,nvarchar,50,NO
+dbo,Dim_Product,Product_Line,nvarchar,50,NO
+dbo,Dim_Product,Transfer_Price_EUR,money,NULL,NO
+dbo,Dim_Product,Product_Price_EUR,numeric,NULL,YES
+dbo,Dim_Product,Price_Segment,nvarchar,50,NO
+dbo,Dim_Product,Days_for_Shipping,int,NULL,NO
+dbo,Dim_Product_Category,ID_Product_Category,int,NULL,NO
+dbo,Dim_Product_Category,Product_Category,nvarchar,50,NO
+dbo,Dim_Product_Category,Product_Line,nvarchar,50,NO
+dbo,Dim_Sales_Channel,ID_Sales_Channel,int,NULL,NO
+dbo,Dim_Sales_Channel,Sales_Channel,nvarchar,50,NO
+dbo,Dim_Sales_Channel,Sales_Channel_Manager,nvarchar,50,NO
+dbo,Dim_Sales_Office,ID_Sales_Office,int,NULL,NO
+dbo,Dim_Sales_Office,Sales_Office,nvarchar,50,NO
+dbo,Dim_Sales_Office,Local_Currency,nchar,3,NO
+dbo,Dim_Sales_Office,Sales_Office_Address,nvarchar,50,YES
+dbo,Dim_Sales_Office,Sales_Region,nvarchar,50,NO
+dbo,Dim_Sales_Office,Sales_Country,nvarchar,50,NO
+dbo,Dim_Sales_Office,Global_Region,nvarchar,50,NO
+dbo,Dim_Sales_Office,State,nvarchar,50,YES
+dbo,Dim_Sales_Office,GEO_Latitude,float,NULL,YES
+dbo,Dim_Sales_Office,GEO_Longitude,float,NULL,YES
+dbo,Facts_Currency_Rates,ID_Calendar,date,NULL,NO
+dbo,Facts_Currency_Rates,ID_Currency,int,NULL,NO
+dbo,Facts_Currency_Rates,Reference Currency,int,NULL,NO
+dbo,Facts_Currency_Rates,Average Day Rate,money,NULL,YES
+dbo,Facts_Currency_Rates,Average Month Rate,money,NULL,YES
+dbo,Facts_Currency_Rates,Average Year Rate,money,NULL,YES
+dbo,Facts_Currency_Rates,Fix Currency Rate,money,NULL,YES
+dbo,Facts_Daily_Sales,ID_Order_Date,date,NULL,NO
+dbo,Facts_Daily_Sales,ID_Shipping_Date,date,NULL,NO
+dbo,Facts_Daily_Sales,ID_Currency,int,NULL,NO
+dbo,Facts_Daily_Sales,ID_Product,int,NULL,NO
+dbo,Facts_Daily_Sales,ID_Sales_Channel,int,NULL,NO
+dbo,Facts_Daily_Sales,ID_Sales_Office,int,NULL,NO
+dbo,Facts_Daily_Sales,Revenue,money,NULL,NO
+dbo,Facts_Daily_Sales,Discount,money,NULL,NO
+dbo,Facts_Daily_Sales,Sales_Amount,int,NULL,NO
+dbo,Facts_Monthly_Currency_Rates,ID_Calendar_Month,date,NULL,NO
+dbo,Facts_Monthly_Currency_Rates,ID_Currency,int,NULL,NO
+dbo,Facts_Monthly_Currency_Rates,Reference Currency,int,NULL,NO
+dbo,Facts_Monthly_Currency_Rates,Minimum Day Rate,money,NULL,NO
+dbo,Facts_Monthly_Currency_Rates,Average Month Rate,money,NULL,NO
+dbo,Facts_Monthly_Currency_Rates,Average Year Rate,money,NULL,NO
+dbo,Facts_Monthly_Currency_Rates,Fix Currency Rate,money,NULL,YES
+dbo,Facts_Monthly_Sales,ID_Calendar_Month,date,NULL,NO
+dbo,Facts_Monthly_Sales,ID_Currency,int,NULL,NO
+dbo,Facts_Monthly_Sales,ID_Product,int,NULL,NO
+dbo,Facts_Monthly_Sales,ID_Sales_Channel,int,NULL,NO
+dbo,Facts_Monthly_Sales,ID_Sales_Office,int,NULL,NO
+dbo,Facts_Monthly_Sales,Discount,money,NULL,NO
+dbo,Facts_Monthly_Sales,Revenue,money,NULL,NO
+dbo,Facts_Monthly_Sales,Sales_Amount,int,NULL,NO
+dbo,Facts_Monthly_Sales,Transfer_Price,money,NULL,NO
+dbo,Facts_Monthly_Sales_and_Quota,ID_Planning_Version,int,NULL,YES
+dbo,Facts_Monthly_Sales_and_Quota,ID_Calendar_Month,date,NULL,NO
+dbo,Facts_Monthly_Sales_and_Quota,ID_Product_Category,int,NULL,YES
+dbo,Facts_Monthly_Sales_and_Quota,ID_Currency,int,NULL,YES
+dbo,Facts_Monthly_Sales_and_Quota,ID_Product,int,NULL,YES
+dbo,Facts_Monthly_Sales_and_Quota,ID_Sales_Channel,int,NULL,YES
+dbo,Facts_Monthly_Sales_and_Quota,ID_Sales_Office,int,NULL,YES
+dbo,Facts_Monthly_Sales_and_Quota,Revenue,money,NULL,YES
+dbo,Facts_Monthly_Sales_and_Quota,Revenue_Quota,money,NULL,YES
+dbo,Facts_Monthly_Sales_and_Quota,Discount,money,NULL,YES
+dbo,Facts_Monthly_Sales_and_Quota,Transfer_Price,money,NULL,YES
+dbo,Facts_Monthly_Sales_and_Quota,Sales_Amount,int,NULL,YES
+dbo,Facts_Monthly_Sales_and_Quota,Sales_Amount_Quota,int,NULL,YES
+dbo,Facts_Monthly_Sales_and_Quota,Currency Rate,float,NULL,YES
+dbo,Facts_Monthly_Sales_Quota,ID_Calendar_Month,date,NULL,NO
+dbo,Facts_Monthly_Sales_Quota,ID_Planning_Version,int,NULL,NO
+dbo,Facts_Monthly_Sales_Quota,ID_Product_Category,int,NULL,NO
+dbo,Facts_Monthly_Sales_Quota,ID_Price_Segment,int,NULL,NO
+dbo,Facts_Monthly_Sales_Quota,ID_Currency,int,NULL,NO
+dbo,Facts_Monthly_Sales_Quota,ID_Sales_Office,int,NULL,NO
+dbo,Facts_Monthly_Sales_Quota,Revenue_Quota,money,NULL,NO
+dbo,Facts_Monthly_Sales_Quota,Sales_Amount_Quota,int,NULL,NO
+dbo,Facts_Weekly_Sales_Orders,ID,int,NULL,NO
+dbo,Facts_Weekly_Sales_Orders,ID_Order_Week,date,NULL,NO
+dbo,Facts_Weekly_Sales_Orders,ID_Shipping_Week,date,NULL,NO
+dbo,Facts_Weekly_Sales_Orders,ID_DueDate_Week,date,NULL,NO
+dbo,Facts_Weekly_Sales_Orders,ID_Currency,int,NULL,NO
+dbo,Facts_Weekly_Sales_Orders,ID_Product,int,NULL,NO
+dbo,Facts_Weekly_Sales_Orders,ID_Sales_Channel,int,NULL,NO
+dbo,Facts_Weekly_Sales_Orders,ID_Sales_Office,int,NULL,NO
+dbo,Facts_Weekly_Sales_Orders,Discount,money,NULL,NO
+dbo,Facts_Weekly_Sales_Orders,Revenue,money,NULL,NO
+dbo,Facts_Weekly_Sales_Orders,Sales_Amount,int,NULL,NO

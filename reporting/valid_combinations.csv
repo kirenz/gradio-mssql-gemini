@@ -1,0 +1,71 @@
+Sales Organisation,Sales Country,Sales Region,Sales City,Product Line,Product Category,combination_count
+Europe,France,France Mediterian Region,Nice,Bicycles,City Bikes,63
+Europe,United Kingdom,London Metropolitan,London,Bicycles,Trekking Bikes,63
+North America,United States,USA NorthCentral States,Chicago,Bicycles,City Bikes,63
+North America,United States,USA Mountain States,Denver,Bicycles,Trekking Bikes,63
+North America,United States,USA Mountain States,Denver,Bicycles,Race Bikes,63
+North America,United States,USA Mountain States,Denver,Bicycles,Mountain Bikes,63
+North America,United States,USA Mountain States,Denver,Bicycles,Kid Bikes,63
+North America,United States,USA Mountain States,Denver,Bicycles,City Bikes,63
+Europe,United Kingdom,London Metropolitan,London,Bicycles,Race Bikes,63
+North America,United States,USA NorthCentral States,Chicago,Bicycles,Mountain Bikes,63
+Europe,United Kingdom,London Metropolitan,London,Bicycles,Mountain Bikes,63
+Europe,United Kingdom,London Metropolitan,London,Bicycles,Kid Bikes,63
+Europe,United Kingdom,London Metropolitan,London,Bicycles,City Bikes,63
+Europe,Switzerland,Switzerland,Zurich,Bicycles,Trekking Bikes,63
+Europe,Switzerland,Switzerland,Zurich,Bicycles,Race Bikes,63
+Europe,Switzerland,Switzerland,Zurich,Bicycles,Mountain Bikes,63
+North America,United States,USA NorthCentral States,Chicago,Bicycles,Kid Bikes,63
+North America,United States,USA NorthCentral States,Chicago,Bicycles,Race Bikes,63
+Europe,France,France Mediterian Region,Nice,Bicycles,Kid Bikes,63
+North America,United States,USA Pacific States,San Francisco,Bicycles,Mountain Bikes,63
+North America,United States,USA SouthEast States,Miami,Bicycles,Race Bikes,63
+North America,United States,USA SouthEast States,Miami,Bicycles,Mountain Bikes,63
+North America,United States,USA SouthEast States,Miami,Bicycles,Kid Bikes,63
+North America,United States,USA SouthEast States,Miami,Bicycles,City Bikes,63
+North America,United States,USA Pacific States,San Francisco,Bicycles,Trekking Bikes,63
+North America,United States,USA Pacific States,San Francisco,Bicycles,Race Bikes,63
+North America,United States,USA Pacific States,San Francisco,Bicycles,Kid Bikes,63
+North America,United States,USA NorthCentral States,Chicago,Bicycles,Trekking Bikes,63
+North America,United States,USA Pacific States,San Francisco,Bicycles,City Bikes,63
+North America,United States,USA NorthEast States,Boston,Bicycles,Trekking Bikes,63
+North America,United States,USA NorthEast States,Boston,Bicycles,Race Bikes,63
+North America,United States,USA NorthEast States,Boston,Bicycles,Mountain Bikes,63
+North America,United States,USA NorthEast States,Boston,Bicycles,Kid Bikes,63
+North America,United States,USA NorthEast States,Boston,Bicycles,City Bikes,63
+Europe,Switzerland,Switzerland,Zurich,Bicycles,Kid Bikes,63
+Europe,Switzerland,Switzerland,Zurich,Bicycles,City Bikes,63
+Europe,Netherlands,The Netherlands,Amsterdam,Bicycles,Trekking Bikes,63
+Europe,France,France Paris Metropolitan,Paris,Bicycles,Trekking Bikes,63
+Europe,Germany,Germany North,Hamburg,Bicycles,City Bikes,63
+Europe,Germany,Germany East,Berlin,Bicycles,Trekking Bikes,63
+Europe,Germany,Germany East,Berlin,Bicycles,Race Bikes,63
+Europe,Germany,Germany East,Berlin,Bicycles,Mountain Bikes,63
+Europe,Germany,Germany East,Berlin,Bicycles,Kid Bikes,63
+Europe,Germany,Germany East,Berlin,Bicycles,City Bikes,63
+Europe,France,France Paris Metropolitan,Paris,Bicycles,Race Bikes,63
+Europe,Netherlands,The Netherlands,Amsterdam,Bicycles,Race Bikes,63
+Europe,France,France Paris Metropolitan,Paris,Bicycles,Mountain Bikes,63
+Europe,France,France Paris Metropolitan,Paris,Bicycles,Kid Bikes,63
+Europe,France,France Paris Metropolitan,Paris,Bicycles,City Bikes,63
+Europe,France,France Mediterian Region,Nice,Bicycles,Trekking Bikes,63
+Europe,France,France Mediterian Region,Nice,Bicycles,Race Bikes,63
+Europe,France,France Mediterian Region,Nice,Bicycles,Mountain Bikes,63
+Europe,Germany,Germany North,Hamburg,Bicycles,Kid Bikes,63
+Europe,Germany,Germany North,Hamburg,Bicycles,Mountain Bikes,63
+Europe,Germany,Germany North,Hamburg,Bicycles,Race Bikes,63
+Europe,Germany,Germany North,Hamburg,Bicycles,Trekking Bikes,63
+Europe,Germany,Germany South,Stuttgart,Bicycles,City Bikes,63
+Europe,Germany,Germany South,Stuttgart,Bicycles,Kid Bikes,63
+Europe,Germany,Germany South,Stuttgart,Bicycles,Mountain Bikes,63
+Europe,Germany,Germany South,Stuttgart,Bicycles,Race Bikes,63
+Europe,Germany,Germany South,Stuttgart,Bicycles,Trekking Bikes,63
+Europe,Germany,Germany West,Cologne,Bicycles,City Bikes,63
+Europe,Germany,Germany West,Cologne,Bicycles,Kid Bikes,63
+Europe,Germany,Germany West,Cologne,Bicycles,Mountain Bikes,63
+Europe,Germany,Germany West,Cologne,Bicycles,Race Bikes,63
+Europe,Germany,Germany West,Cologne,Bicycles,Trekking Bikes,63
+Europe,Netherlands,The Netherlands,Amsterdam,Bicycles,City Bikes,63
+Europe,Netherlands,The Netherlands,Amsterdam,Bicycles,Kid Bikes,63
+Europe,Netherlands,The Netherlands,Amsterdam,Bicycles,Mountain Bikes,63
+North America,United States,USA SouthEast States,Miami,Bicycles,Trekking Bikes,63
