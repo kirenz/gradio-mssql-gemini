@@ -22,6 +22,7 @@ Get to a rendered PDF report in roughly five minutes.
    ```
    Fill in the `MSSQL_*` connection details and your `GEMINI_API_KEY`. The helper scripts read these values automatically.
 4. **Render the PDF briefing**
+
    ```bash
    uv run python scripts/render_dashboard.py
    ```

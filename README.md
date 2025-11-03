@@ -34,9 +34,10 @@ code .
 ```bash
 uv run python scripts/render_dashboard.py
 ```
+
 9. The render step opens `examples/pdf-briefing/outputs/sales_pdf.pdf`.
 
-## Choose Your Path
+## Choose Application
 
 | Experience | What happens | Command |
 | --- | --- | --- |
@@ -67,4 +68,4 @@ Import from the package anywhere (Gradio app, Quarto notebook, script) to avoid 
 - [Architecture](docs/architecture.md) – explains the new project layout.
 - [Extending](docs/extending.md) – how to add prompts, scripts, or brand-new examples.
 
-Questions or contributions? Open an issue or send a PR.
+
