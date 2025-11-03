@@ -198,21 +198,55 @@ def load_schema_description(
         schema_path = repo_root / "assets" / "schema" / "schema.csv"
 
     df = pd.read_csv(schema_path)
-    columns = ["table", "column"]
-    if include_types and "dtype" in df.columns:
-        columns.append("dtype")
-    elif include_types and "data_type" in df.columns:
-        columns.append("data_type")
 
-    # Deduplicate and format for prompting
+    # Normalise column names to make the loader resilient to different exports
+    normalised = {
+        col.strip().lower().replace(" ", "_"): col for col in df.columns
+    }
+
+    def _pick_column(*aliases: str) -> Optional[str]:
+        for alias in aliases:
+            if alias in normalised:
+                return normalised[alias]
+        return None
+
+    table_name_col = _pick_column("table", "table_name")
+    column_name_col = _pick_column("column", "column_name")
+    dtype_col = _pick_column("dtype", "data_type")
+    schema_col = _pick_column("schema", "table_schema")
+
+    if table_name_col is None or column_name_col is None:
+        available = ", ".join(df.columns)
+        raise ValueError(
+            "Schema CSV must include table and column name fields. "
+            f"Available columns: {available}"
+        )
+
+    subset_cols = [table_name_col, column_name_col]
+    if dtype_col:
+        subset_cols.append(dtype_col)
+    if schema_col:
+        subset_cols.append(schema_col)
+
     lines = []
-    for _, row in df[columns].drop_duplicates().iterrows():
-        table = row["table"]
-        column = row["column"]
-        dtype = row.get("dtype") or row.get("data_type")
-        if include_types and dtype:
-            lines.append(f"{table}.{column} ({dtype})")
+    for _, row in df[subset_cols].drop_duplicates().iterrows():
+        table_name = str(row[table_name_col]).strip()
+        column_name = str(row[column_name_col]).strip()
+        table_identifier = table_name
+
+        if schema_col:
+            schema_name = row[schema_col]
+            if pd.notna(schema_name):
+                schema_str = str(schema_name).strip()
+                if schema_str:
+                    table_identifier = f"{schema_str}.{table_identifier}"
+
+        dtype = row[dtype_col] if dtype_col else None
+        dtype_str = str(dtype).strip() if dtype is not None and pd.notna(dtype) else ""
+
+        if include_types and dtype_str:
+            lines.append(f"{table_identifier}.{column_name} ({dtype_str})")
         else:
-            lines.append(f"{table}.{column}")
+            lines.append(f"{table_identifier}.{column_name}")
 
     return "\n".join(lines)
