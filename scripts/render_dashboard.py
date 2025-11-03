@@ -69,9 +69,13 @@ def render(example_path: Optional[Path] = None) -> Path:
 
     pdf_path = output_dir / "sales_pdf.pdf"
     if not pdf_path.exists():
-        raise FileNotFoundError(
-            f"Expected PDF not found at {pdf_path}. Inspect Quarto output for clues."
-        )
+        fallback_pdf = example_path.with_suffix(".pdf")
+        if fallback_pdf.exists():
+            shutil.move(str(fallback_pdf), pdf_path)
+        else:
+            raise FileNotFoundError(
+                f"Expected PDF not found at {pdf_path}. Inspect Quarto output for clues."
+            )
     return pdf_path
 
 

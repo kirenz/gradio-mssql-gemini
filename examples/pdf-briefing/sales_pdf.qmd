@@ -49,9 +49,15 @@ from datetime import datetime
 import sys
 from pathlib import Path
 
-src_path = Path.cwd().resolve().parents[2] / "src"
-if str(src_path) not in sys.path:
-    sys.path.insert(0, str(src_path))
+cwd = Path.cwd().resolve()
+for base in (cwd, *cwd.parents):
+    candidate = base / "src"
+    if candidate.exists():
+        if str(candidate) not in sys.path:
+            sys.path.insert(0, str(candidate))
+        break
+else:
+    raise RuntimeError("Unable to locate project src directory; run from inside the repo.")
 
 from quarto_mssql_gemini import get_sales_data
 from quarto_mssql_gemini.ai import get_plot_description

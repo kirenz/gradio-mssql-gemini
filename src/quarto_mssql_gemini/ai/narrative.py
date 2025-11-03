@@ -100,3 +100,5 @@ Respond with 2-4 sentences. Highlight specific numbers that stand out and includ
         return analysis or "No automated insight available."
     except GeminiClientError as exc:
         return f"Gemini unavailable: {exc}"
+    except Exception as exc:  # pragma: no cover - depends on remote API availability
+        return f"AI analysis unavailable ({exc.__class__.__name__}: {exc})"

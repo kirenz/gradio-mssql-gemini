@@ -1,6 +1,10 @@
-# Quick Start
+# Grado + MSSQL + Gemini 
 
-Get to a rendered report in roughly five minutes.
+This repository demonstrates how to build AI-powered data applications using Gradio front ends, a Microsoft SQL Server backend, and Google Gemini for natural language understanding.
+
+## Quick Start
+
+Get to a rendered PDF report in roughly five minutes.
 
 1. **Install tooling**
    - [uv](https://github.com/astral-sh/uv) for dependency management.
@@ -22,7 +26,9 @@ Get to a rendered report in roughly five minutes.
    uv run python scripts/render_dashboard.py
    ```
    The script checks for Quarto, validates the database connection, and renders `examples/pdf-briefing/sales_pdf.qmd`. When it finishes you will find `examples/pdf-briefing/outputs/sales_pdf.pdf`.
+
 5. **Try the Gradio front ends (optional)**
+
    ```bash
    uv run python examples/sql-assistant/app_df.py
    ```
