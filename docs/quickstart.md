@@ -30,9 +30,9 @@ Get to a rendered PDF report in roughly five minutes.
 
 5. **Try the Gradio front ends (optional)**
 
-   ```bash
-   uv run python examples/sql-assistant/app_df.py
-   ```
-   Launches the SQL chat assistant in your browser. Explore the other apps by swapping in `app_plot.py`, `app_speech.py`, or the forecasting app in `examples/sales-dashboard/forecasting_app.py`.
+```bash
+uv run python examples/sql-assistant/app_df.py
+```
+Launches the SQL chat assistant in your browser. Prefer the Google ADK version? Swap the path for `examples/sql-adk/app_df.py`. Explore the other apps by swapping in `app_plot.py`, `app_speech.py`, or the forecasting app in `examples/sales-dashboard/forecasting_app.py`.
 
 Need a deeper walkthrough? Continue with [Architecture](architecture.md) or [Extending the Examples](extending.md).

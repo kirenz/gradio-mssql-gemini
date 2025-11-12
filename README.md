@@ -46,6 +46,12 @@ uv run python scripts/render_dashboard.py
 uv run python examples/sql-assistant/app_df.py
 ```
 
+[SQL ADK Assistant](examples/sql-adk/README.md) offers the same experience powered by the Google Agent Development Kit (ADK) while keeping the Gradio flows identical.
+
+```bash
+uv run python examples/sql-adk/app_df.py
+```
+
 [Sales Forecasting Lab](examples/sales-dashboard/README.md) lets you filter, run SARIMAX forecasts, and export artefacts.
 
 ```bash
